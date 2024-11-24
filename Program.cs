@@ -3,15 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-var SQLusername = builder.Configuration["SQLServer:Username"];
-var SQLpassword = builder.Configuration["SQLServer:Password"];
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-if (!string.IsNullOrEmpty(SQLusername) && !string.IsNullOrEmpty(SQLpassword))
-{
-    connectionString = connectionString.Replace("User ID={Username};Password={Password}", $"User ID={SQLusername};Password={SQLpassword}");
-}
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
