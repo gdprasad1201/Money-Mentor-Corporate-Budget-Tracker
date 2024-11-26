@@ -1,8 +1,8 @@
-using budgetTracker.Models;
+﻿using Expense_Tracker.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace budgetTracker.Controllers
+namespace Expense_Tracker.Controllers
 {
     public class HomeController : Controller
     {
