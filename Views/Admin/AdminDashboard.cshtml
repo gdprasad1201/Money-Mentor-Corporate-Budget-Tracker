@@ -1,0 +1,48 @@
+﻿@model Expense_Tracker.Controllers.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard Details";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h3>Manage Roles</h3>
+
+<form method="post" asp-action="AssignRole">
+    <select name="userId">
+        @foreach (var user in Model.Users)
+        {
+            <option value="@user.User.Id">@user.User.Email</option>
+        }
+    </select>
+    <select name="role">
+        @foreach (var role in Model.Roles)
+        {
+            <option value="@role.Name">@role.Name</option>
+        }
+    </select>
+    <button type="submit">Assign Role</button>
+</form>
+
+<h3>User List</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Roles</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var userRole in Model.Users)
+        {
+            <tr>
+                <td>@userRole.User.UserName</td>
+                <td>@userRole.User.Email</td>
+                <td>@string.Join(", ", userRole.Roles)</td>
+                <td><a href="@Url.Action("AssignRole", "Admin", new { userId = userRole.User.Id })">Assign Role</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
