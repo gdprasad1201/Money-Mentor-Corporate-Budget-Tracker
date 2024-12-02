@@ -207,6 +207,7 @@ namespace Expense_Tracker.Controllers
         }
 
         // POST: Admin/DeleteCategory/5
+        //Hello
         [HttpPost, ActionName("DeleteCategory")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteCategoryConfirmed(int id)
