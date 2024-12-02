@@ -1,0 +1,35 @@
+﻿@model Expense_Tracker.Controllers.AssignRoleViewModel
+
+@{
+    ViewData["Title"] = "Assign Role";
+}
+
+<h2>Assign Role to @Model.UserName</h2>
+
+<form method="post">
+    <input type="hidden" asp-for="UserId" />
+    <div class="form-group">
+        <label for="Role">Role:</label>
+        <select name="SelectedRoles" class="form-control" multiple>
+            @foreach (var role in Model.Roles)
+            {
+                <option value="@role.Name">@role.Name</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Assign Role</button>
+</form>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success mt-3">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger mt-3">
+        @TempData["ErrorMessage"]
+    </div>
+}
