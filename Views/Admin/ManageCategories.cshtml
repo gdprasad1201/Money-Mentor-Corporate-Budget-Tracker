@@ -4,29 +4,51 @@
     ViewData["Title"] = "Manage Categories";
 }
 
-<h2>Manage Categories</h2>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-center mb-4">@ViewData["Title"]</h2>
 
-<p>
-    <a asp-action="CreateCategory" class="btn btn-primary">Create New Category</a>
-</p>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <p class="lead">Manage your expense categories efficiently.</p>
+                <a asp-action="CreateCategory" class="btn btn-primary btn-sm">
+                    <i class="fa fa-plus-circle"></i> Create New Category
+                </a>
+            </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var category in Model)
-        {
-            <tr>
-                <td>@category.Title</td>
-                <td>
-                    <a asp-action="EditCategory" asp-route-id="@category.CategoryId">Edit</a> |
-                    <a asp-action="DeleteCategory" asp-route-id="@category.CategoryId">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+            <table class="table table-bordered table-hover table-striped">
+                <thead class="table-dark text-center">
+                    <tr>
+                        <th style="width: 70%;">Title</th>
+                        <th style="width: 30%;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No categories available. Click "Create New Category" to add one.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var category in Model)
+                        {
+                            <tr>
+                                <td>@category.Title</td>
+                                <td class="text-center">
+                                    <a asp-action="EditCategory" asp-route-id="@category.CategoryId" class="btn btn-warning btn-sm me-2">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
+                                    <a asp-action="DeleteCategory" asp-route-id="@category.CategoryId" class="btn btn-danger btn-sm">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

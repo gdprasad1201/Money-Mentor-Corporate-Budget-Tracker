@@ -22,15 +22,16 @@
                 <div class="ms-auto">
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <span class="navbar-text">Hello, @ViewBag.FirstName!</span>
                         @if (User.IsInRole("Admin"))
                         {
-                            <!-- Admin Links -->
+                            <!-- Display 'Hello Admin!' -->
+                            <span class="navbar-text">Hello Admin!</span>
                             <a href="@Url.Action("Index", "Admin")" class="btn btn-success">Admin Dashboard</a>
                         }
                         else
                         {
-                            <!-- User Links -->
+                            <!-- Display user's first name -->
+                            <span class="navbar-text">Hello, @ViewBag.FirstName!</span>
                             <a href="@Url.Action("Index", "User")" class="btn btn-success">User Dashboard</a>
                         }
                         <!-- Logout Form -->
