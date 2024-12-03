@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Expense_Tracker.Controllers.UserRoleViewModel>
+
+@{
+    ViewData["Title"] = "User List";
+}
+
+<h2>User List</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Roles</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var userRole in Model)
+        {
+            <tr>
+                <td>@userRole.User.UserName</td>
+                <td>@userRole.User.Email</td>
+                <td>@string.Join(", ", userRole.Roles)</td>
+                <td>
+                    <a href="@Url.Action("AssignRole", "Admin", new { userId = userRole.User.Id })">Assign Role</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

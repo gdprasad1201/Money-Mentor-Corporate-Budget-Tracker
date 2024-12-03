@@ -1,0 +1,9 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>Welcome to the Admin Dashboard!</p>
+<a href="@Url.Action("UserList", "Admin")" class="btn btn-primary">Manage Users</a>
+<a href="@Url.Action("ManageCategories", "Admin")" class="btn btn-secondary">Manage Categories</a>

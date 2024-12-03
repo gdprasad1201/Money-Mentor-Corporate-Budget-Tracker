@@ -1,0 +1,18 @@
+﻿@model Expense_Tracker.Models.RoleManagementViewModel
+
+<h2>Manage Roles</h2>
+<form method="post" asp-action="AssignRole">
+    <select name="userId">
+        @foreach (var user in Model.Users)
+        {
+            <option value="@user.Id">@user.Email</option>
+        }
+    </select>
+    <select name="role">
+        @foreach (var role in Model.Roles)
+        {
+            <option value="@role.Name">@role.Name</option>
+        }
+    </select>
+    <button type="submit">Assign Role</button>
+</form>

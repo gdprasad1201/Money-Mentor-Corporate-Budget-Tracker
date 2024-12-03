@@ -1,9 +1,61 @@
 ﻿@model IEnumerable<Expense_Tracker.Models.Category>
 
+@* <h2>Categories</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Icon</th>
+            <th>Type</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td>@item.Icon</td>
+                <td>@item.Type</td>
+                <td>
+                    <a asp-action="AddOrEdit" asp-route-id="@item.CategoryId">Edit</a> |
+                    <form asp-action="Delete" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@item.CategoryId" />
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if(User.IsInRole("Admin") && User.Identity.IsAuthenticated) {
+    <a asp-action="AddOrEdit">Create New Category</a>
+}
+else {
+    <p>You need to be an admin to create a new category.</p>
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+} *@
+
 @{
     ViewData["PageTitle"] = "Categories";
-    ViewData["PageActionText"] = "+ New Category";
-    ViewData["PageActionUrl"] = "/Category/AddOrEdit";
+
+    if (User.IsInRole("Admin") && User.Identity.IsAuthenticated) 
+    {
+        ViewData["PageActionText"] = "+ New Category";
+        ViewData["PageActionUrl"] = "/Category/AddOrEdit";
+    }
+    else 
+    {
+        ViewData["PageActionText"] = "You need to be an admin to create a new category.";
+        ViewData["PageActionUrl"] = null;
+    }
 }
 
 
@@ -31,15 +83,24 @@
 
 <script id="actionColumnTemplate" type="text/x-template">
     <div class="d-flex flex-row justify-content-start">
-        <a class="btn btn-sm no-a-decoration" href="/Category/AddOrEdit/${CategoryId}">
-            <i class="fa-solid fa-pen fa-lg"></i>
-        </a>
-        <form action="/Category/Delete/${CategoryId}" method="post">
-            @Html.AntiForgeryToken()
-            <button type="submit" class="btn btn-sm btn-link no-a-decoration"
-            onclick="return confirm(&quot;Are sure to delete this record?&quot;)">
-                <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
-            </button>
-        </form>
+        @if (User.IsInRole("Admin") && User.Identity.IsAuthenticated)
+        {
+            <a class="btn btn-sm no-a-decoration" href="/Category/AddOrEdit/${CategoryId}">
+                <i class="fa-solid fa-pen fa-lg"></i>
+            </a>
+            <form action="/Category/Delete/${CategoryId}" method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-sm btn-link no-a-decoration"
+                onclick="return confirm(&quot;Are sure to delete this record?&quot;)">
+                    <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
+                </button>
+            </form>
+        }
     </div>
 </script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

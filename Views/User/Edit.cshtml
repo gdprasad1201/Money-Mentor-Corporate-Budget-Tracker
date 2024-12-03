@@ -1,0 +1,30 @@
+﻿@model Expense_Tracker.Models.EditProfileViewModel
+
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<h1>Edit Profile</h1>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <div>
+        <label asp-for="UserName"></label>
+        <input asp-for="UserName" />
+    </div>
+
+    <div>
+        <label asp-for="Email"></label>
+        <input asp-for="Email" />
+    </div>
+
+    <div>
+        <label asp-for="ProfilePictureUrl">Upload Profile Picture</label>
+        <input type="file" name="ProfilePicture" accept="image/*" />
+    </div>
+
+    <button type="submit">Save Changes</button>
+</form>
+
+<style>
+    /* Add any custom styles here */
+</style>
