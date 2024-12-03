@@ -4,27 +4,84 @@
     ViewData["Title"] = "Edit Profile";
 }
 
-<h1>Edit Profile</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Edit Profile</h1>
 
-<form asp-action="Edit" method="post" enctype="multipart/form-data">
-    <div>
-        <label asp-for="UserName"></label>
-        <input asp-for="UserName" />
+    <!-- Display User Info -->
+    <div class="profile-container d-flex align-items-center" style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); margin-bottom: 30px;">
+        <!-- Profile Picture -->
+        <div class="profile-pic" style="flex-shrink: 0;">
+            <img src="@ViewBag.ProfilePictureUrl" alt="Profile Picture" class="img-fluid rounded-circle" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #007bff;" />
+        </div>
+
+        <!-- User Information -->
+        <div class="profile-info ms-4" style="font-size: 18px; color: #343a40; margin-left: 20px;">
+            <h2 class="text-primary" style="font-size: 1.5rem; font-weight: 600; color: #007bff; margin-bottom: 10px;">
+                Hello, @ViewBag.FirstName @ViewBag.LastName!
+            </h2>
+            <p class="text-muted" style="font-size: 1rem; color: #6c757d;">
+                Email: @Model.Email
+            </p>
+        </div>
     </div>
 
-    <div>
-        <label asp-for="Email"></label>
-        <input asp-for="Email" />
-    </div>
+    <!-- Profile Edit Form -->
+    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+        <div class="form-group mb-3">
+            <label for="UserName" class="form-label">Username</label>
+            <input asp-for="UserName" class="form-control" />
+        </div>
 
-    <div>
-        <label asp-for="ProfilePictureUrl">Upload Profile Picture</label>
-        <input type="file" name="ProfilePicture" accept="image/*" />
-    </div>
+        <div class="form-group mb-3">
+            <label for="Email" class="form-label">Email</label>
+            <input asp-for="Email" class="form-control" />
+        </div>
 
-    <button type="submit">Save Changes</button>
-</form>
+        <div class="form-group mb-3">
+            <label for="ProfilePicture" class="form-label">Upload Profile Picture</label>
+            <input type="file" asp-for="ProfilePicture" class="form-control" accept="image/*" />
+        </div>
 
+        <button type="submit" class="btn btn-success">Save Changes</button>
+    </form>
+</div>
+
+<!-- Styling -->
 <style>
-    /* Add any custom styles here */
+    /* Container */
+    .container {
+        max-width: 800px;
+    }
+
+    /* Form Inputs */
+    .form-label {
+        font-weight: bold;
+    }
+
+    .form-control {
+        padding: 10px;
+        font-size: 1rem;
+    }
+
+    /* Profile Picture Styling */
+    .profile-pic img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border: 3px solid #007bff;
+    }
+
+    /* Form Button */
+    .btn-success {
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 5px;
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
 </style>

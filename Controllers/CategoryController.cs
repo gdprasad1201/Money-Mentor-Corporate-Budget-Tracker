@@ -2,11 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Expense_Tracker.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Expense_Tracker.Controllers
 {
-    [Authorize (Roles = "Admin, User")]
     public class CategoryController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -25,7 +23,6 @@ namespace Expense_Tracker.Controllers
         }
 
         // GET: Category/AddOrEdit
-        [Authorize(Roles = "Admin")]
         public IActionResult AddOrEdit(int id = 0)
         {
             if (id == 0)
@@ -37,7 +34,6 @@ namespace Expense_Tracker.Controllers
         // POST: Category/AddOrEdit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddOrEdit([Bind("CategoryId,Title,Icon,Type")] Category category)
         {
             if (ModelState.IsValid)
@@ -56,7 +52,6 @@ namespace Expense_Tracker.Controllers
         // POST: Category/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Categories == null)

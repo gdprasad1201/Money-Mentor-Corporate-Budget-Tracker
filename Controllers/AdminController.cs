@@ -12,7 +12,7 @@ namespace Expense_Tracker.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager; // Use ApplicationUser instead of IdentityUser
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _context;
 
@@ -39,14 +39,18 @@ namespace Expense_Tracker.Controllers
                 });
             }
 
-            var model = new AdminDashboardViewModel
+            var model = new AdminViewModel
             {
                 Users = userRoles,
                 Roles = await _roleManager.Roles.ToListAsync()
             };
 
+            // Set the "Hello Admin!" message to ViewData
+            ViewData["AdminMessage"] = "Hello Admin!";
+
             return View(model);
         }
+
 
         // GET: Admin/UserList
         public async Task<IActionResult> UserList()
@@ -100,7 +104,7 @@ namespace Expense_Tracker.Controllers
             var currentRoles = await _userManager.GetRolesAsync(user);
             await _userManager.RemoveFromRolesAsync(user, currentRoles);
 
-            if (model.SelectedRoles != null)
+            if (model.SelectedRoles != null && model.SelectedRoles.Any())
             {
                 await _userManager.AddToRolesAsync(user, model.SelectedRoles);
             }
@@ -197,7 +201,6 @@ namespace Expense_Tracker.Controllers
             }
 
             var category = await _context.Categories.FirstOrDefaultAsync(m => m.CategoryId == id);
-
             if (category == null)
             {
                 return NotFound();
@@ -207,8 +210,6 @@ namespace Expense_Tracker.Controllers
         }
 
         // POST: Admin/DeleteCategory/5
-        //Hello
-        //Hello
         [HttpPost, ActionName("DeleteCategory")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteCategoryConfirmed(int id)
@@ -229,16 +230,25 @@ namespace Expense_Tracker.Controllers
         }
     }
 
-    public class UserRoleViewModel
-    {
-        public ApplicationUser User { get; set; } // Use ApplicationUser here instead of IdentityUser
-        public IList<string> Roles { get; set; }
-    }
-
-    public class AdminDashboardViewModel
+    public class AdminViewModel
     {
         public List<UserRoleViewModel> Users { get; set; }
         public List<IdentityRole> Roles { get; set; }
+        public List<IdentityRole> AllRoles { get; set; }
+        public string UserId { get; set; }
+        public string Role { get; set; }
+    }
+
+    public class UserRoleViewModel
+    {
+        public ApplicationUser User { get; set; }
+        public IList<string> Roles { get; set; }
+    }
+
+    public class UserWithRolesViewModel
+    {
+        public IdentityUser User { get; set; }
+        public List<string> Roles { get; set; }
     }
 
     public class AssignRoleViewModel
@@ -246,6 +256,6 @@ namespace Expense_Tracker.Controllers
         public string UserId { get; set; }
         public string UserName { get; set; }
         public List<IdentityRole> Roles { get; set; }
-        public IList<string> SelectedRoles { get; set; } // This will hold the selected roles from the view
+        public IList<string> SelectedRoles { get; set; }
     }
 }

@@ -1,6 +1,6 @@
-﻿@model Expense_Tracker.Models.ApplicationUser
+﻿@model Expense_Tracker.Models.UserProfileViewModel
 
 <h1>User Dashboard</h1>
-<p>Welcome, @Model.UserName!</p>
+<p>Welcome, @Model.FirstName @Model.UserName!</p>  <!-- Use FirstName and UserName from the model -->
 <p>Your email: @Model.Email</p>
 <img src="@Model.ProfilePictureUrl" alt="Profile Picture" />

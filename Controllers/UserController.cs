@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Threading.Tasks;
@@ -30,6 +29,7 @@ namespace Expense_Tracker.Controllers
             {
                 UserId = user.Id,
                 UserName = user.UserName,
+                FirstName = user.FirstName, // Ensure FirstName is included
                 Email = user.Email,
                 ProfilePictureUrl = user.ProfilePictureUrl ?? "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_2x1.jpg" // Default image URL
             };
@@ -40,38 +40,60 @@ namespace Expense_Tracker.Controllers
         // Dashboard action method
         public async Task<IActionResult> Dashboard()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User);  // Fetch the user from the identity
             if (user == null)
             {
                 return NotFound();
             }
 
-            // Prepare any additional data for the dashboard view if needed
-            return View(user); // Assuming you have a view for the dashboard
+            // Make sure to pass the user data (like FirstName and UserName) to the view model
+            var model = new UserProfileViewModel
+            {
+                UserId = user.Id,
+                UserName = user.UserName,
+                FirstName = user.FirstName,  // Ensure FirstName is set here
+                Email = user.Email,
+                ProfilePictureUrl = user.ProfilePictureUrl ?? "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_2x1.jpg" // Default picture URL
+            };
+
+            return View(model); // Pass the model to the view
         }
+
+
 
         // Edit user profile methods
         [HttpGet]
         public async Task<IActionResult> Edit()
         {
+            // Get the current logged-in user
             var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account"); // Or wherever you'd like to redirect if the user is not found
+            }
+
+            // Store the first name and last name in the ViewBag for easy access in the view
+            ViewBag.FirstName = user.FirstName;
+            ViewBag.LastName = user.LastName;
+            ViewBag.ProfilePictureUrl = user.ProfilePictureUrl;
+            // Prepare the view model
             var model = new EditProfileViewModel
             {
                 UserId = user.Id,
                 UserName = user.UserName,
                 Email = user.Email,
-                ProfilePictureUrl = user.ProfilePictureUrl // Assuming you have this property
+                ProfilePictureUrl = user.ProfilePictureUrl, // Assuming this is a valid URL to the profile picture
+                FirstName = user.FirstName, // Pass first name (for form population)
+                LastName = user.LastName  // Pass last name (for form population)
             };
 
             return View(model);
         }
 
-        public IActionResult Index()
-        {
-            return RedirectToAction("Profile");
-        }
 
 
+        // Edit user profile - POST method
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditProfileViewModel model, IFormFile ProfilePicture)
@@ -102,6 +124,21 @@ namespace Expense_Tracker.Controllers
             }
 
             return View(model);
+        }
+
+        // Index action - retrieves user info and redirects to Profile
+        public async Task<IActionResult> Index()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user != null)
+            {
+                // Pass ProfilePictureUrl and FirstName to the view
+                ViewBag.FirstName = user.FirstName;
+                ViewBag.LastName = user.LastName;
+                ViewBag.ProfilePictureUrl = user.ProfilePictureUrl;
+            }
+
+            return View();
         }
     }
 }
