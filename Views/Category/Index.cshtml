@@ -45,17 +45,8 @@ else {
 
 @{
     ViewData["PageTitle"] = "Categories";
-
-    if (User.IsInRole("Admin") && User.Identity.IsAuthenticated) 
-    {
-        ViewData["PageActionText"] = "+ New Category";
-        ViewData["PageActionUrl"] = "/Category/AddOrEdit";
-    }
-    else 
-    {
-        ViewData["PageActionText"] = "You need to be an admin to create a new category.";
-        ViewData["PageActionUrl"] = null;
-    }
+    ViewData["PageActionText"] = "+ New Category";
+    ViewData["PageActionUrl"] = "/Category/AddOrEdit";
 }
 
 
@@ -67,7 +58,10 @@ else {
             <e-grid-columns>
                 <e-grid-column headerText="Category" field="TitleWithIcon"></e-grid-column>
                 <e-grid-column headerText="Type" template="#typeColumnTemplate" width="150px"></e-grid-column>
-                <e-grid-column headerText="Actions" template="#actionColumnTemplate" width="100px"></e-grid-column>
+                @if (User.IsInRole("Admin") && User.Identity.IsAuthenticated)
+                {
+                    <e-grid-column headerText="Actions" template="#actionColumnTemplate" width="100px"></e-grid-column>
+                }
             </e-grid-columns>
         </ejs-grid>
     </div>

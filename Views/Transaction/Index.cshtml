@@ -2,15 +2,8 @@
 
 @{
     ViewData["PageTitle"] = "Transactions";
-    if ((User.IsInRole("Admin") || User.IsInRole("User")) && User.Identity.IsAuthenticated)
-    {
-        ViewData["PageActionText"] = "+ New Transaction";
-        ViewData["PageActionUrl"] = "/Transaction/AddOrEdit";
-    }
-    else {
-        ViewData["PageActionText"] = "You need to be an admin or standard user to create a new transaction.";
-        ViewData["PageActionUrl"] = null;
-    }
+    ViewData["PageActionText"] = "+ New Transaction";
+    ViewData["PageActionUrl"] = "/Transaction/AddOrEdit";
 }
 
 <div class="row">
@@ -23,7 +16,10 @@
                 <e-grid-column headerText="Date" field="Date" width="110px"
                     type="date" format="MMM-dd-yy" textAlign="Left"></e-grid-column>
                 <e-grid-column headerText="Amount" field="FormattedAmount" textAlign="Right" width="110px"></e-grid-column>
-                <e-grid-column headerText="Actions" template="#actionColumnTemplate" width="100px"></e-grid-column>
+                @if (User.IsInRole("Admin") && User.Identity.IsAuthenticated) 
+                {
+                    <e-grid-column headerText="Actions" template="#actionColumnTemplate" width="100px"></e-grid-column>
+                }
             </e-grid-columns>
         </ejs-grid>
     </div>
@@ -31,7 +27,7 @@
 
 <script id="actionColumnTemplate" type="text/x-template">
     <div class="d-flex flex-row justify-content-start">
-        @if ((User.IsInRole("Admin") || User.IsInRole("User")) && User.Identity.IsAuthenticated)
+        @if (User.IsInRole("Admin") && User.Identity.IsAuthenticated)
         {
             <a class="btn btn-sm no-a-decoration" href="/Transaction/AddOrEdit/${TransactionId}">
                 <i class="fa-solid fa-pen fa-lg"></i>

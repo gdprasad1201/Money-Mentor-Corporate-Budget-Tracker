@@ -17,6 +17,7 @@ namespace Expense_Tracker.Controllers
         }
 
         // GET: Category
+        [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> Index()
         {
             return _context.Categories != null ?
@@ -25,7 +26,7 @@ namespace Expense_Tracker.Controllers
         }
 
         // GET: Category/AddOrEdit
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, User")]
         public IActionResult AddOrEdit(int id = 0)
         {
             if (id == 0)
@@ -37,7 +38,7 @@ namespace Expense_Tracker.Controllers
         // POST: Category/AddOrEdit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> AddOrEdit([Bind("CategoryId,Title,Icon,Type")] Category category)
         {
             if (ModelState.IsValid)

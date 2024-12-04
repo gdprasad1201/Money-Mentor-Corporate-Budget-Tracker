@@ -21,6 +21,7 @@ namespace Expense_Tracker.Controllers
         }
 
         // GET: Transaction
+        [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Transactions.Include(t => t.Category);
@@ -29,6 +30,7 @@ namespace Expense_Tracker.Controllers
 
         
         // GET: Transaction/AddOrEdit
+        [Authorize(Roles = "Admin, User")]
         public IActionResult AddOrEdit(int id = 0)
         {
             PopulateCategories();
@@ -43,6 +45,7 @@ namespace Expense_Tracker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> AddOrEdit([Bind("TransactionId,CategoryId,Amount,Note,Date")] Transaction transaction)
         {
             if (ModelState.IsValid)
@@ -61,6 +64,7 @@ namespace Expense_Tracker.Controllers
         // POST: Transaction/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Transactions == null)

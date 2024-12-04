@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "User Dashboard";
+}
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Welcome to Your Dashboard, @ViewBag.FirstName!</h1>
+
+    <div class="profile-container d-flex align-items-center" style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); margin-top: 20px;">
+        <!-- Profile Picture -->
+        <div class="profile-pic" style="flex-shrink: 0;">
+            <img src="@ViewBag.ProfilePictureUrl" alt="Profile Picture" class="img-fluid rounded-circle" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #007bff;" />
+        </div>
+
+        <!-- User Information -->
+        <div class="profile-info ms-4" style="font-size: 18px; color: #343a40; margin-left: 20px;">
+            <h2 class="text-primary" style="font-size: 1.5rem; font-weight: 600; color: #007bff; margin-bottom: 10px;">
+                @ViewBag.FirstName @ViewBag.LastName
+            </h2>
+            <p class="text-muted" style="font-size: 1rem; color: #6c757d;">
+                Email: @User.Identity.Name
+            </p>
+            <a href="/User/Edit" class="btn btn-success" style="margin-top: 15px; padding: 10px 20px; font-size: 1rem; border-radius: 5px; transition: background-color 0.3s ease;">
+                Edit Profile
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Styling for hover effect on Edit Profile Button -->
+<style>
+    .profile-info .btn:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+</style>
