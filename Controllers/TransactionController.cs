@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Expense_Tracker.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Expense_Tracker.Controllers
 {
+    [Authorize (Roles = "Admin, User")]
     public class TransactionController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -25,6 +27,7 @@ namespace Expense_Tracker.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+        
         // GET: Transaction/AddOrEdit
         public IActionResult AddOrEdit(int id = 0)
         {

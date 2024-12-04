@@ -2,8 +2,15 @@
 
 @{
     ViewData["PageTitle"] = "Transactions";
-    ViewData["PageActionText"] = "+ New Transaction";
-    ViewData["PageActionUrl"] = "/Transaction/AddOrEdit";
+    if ((User.IsInRole("Admin") || User.IsInRole("User")) && User.Identity.IsAuthenticated)
+    {
+        ViewData["PageActionText"] = "+ New Transaction";
+        ViewData["PageActionUrl"] = "/Transaction/AddOrEdit";
+    }
+    else {
+        ViewData["PageActionText"] = "You need to be an admin or standard user to create a new transaction.";
+        ViewData["PageActionUrl"] = null;
+    }
 }
 
 <div class="row">
@@ -24,15 +31,18 @@
 
 <script id="actionColumnTemplate" type="text/x-template">
     <div class="d-flex flex-row justify-content-start">
-        <a class="btn btn-sm no-a-decoration" href="/Transaction/AddOrEdit/${TransactionId}">
-            <i class="fa-solid fa-pen fa-lg"></i>
-        </a>
-        <form action="/Transaction/Delete/${TransactionId}" method="post">
-            @Html.AntiForgeryToken()
-            <button type="submit" class="btn btn-sm btn-link no-a-decoration"
-            onclick="return confirm(&quot;Are sure to delete this record?&quot;)">
-                <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
-            </button>
-        </form>
+        @if ((User.IsInRole("Admin") || User.IsInRole("User")) && User.Identity.IsAuthenticated)
+        {
+            <a class="btn btn-sm no-a-decoration" href="/Transaction/AddOrEdit/${TransactionId}">
+                <i class="fa-solid fa-pen fa-lg"></i>
+            </a>
+            <form action="/Transaction/Delete/${TransactionId}" method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-sm btn-link no-a-decoration"
+                onclick="return confirm(&quot;Are sure to delete this record?&quot;)">
+                    <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
+                </button>
+            </form>
+        }
     </div>
 </script>
