@@ -89,6 +89,7 @@ namespace Expense_Tracker.Controllers
                     // Log successful registration
                     _logger.LogInformation($"User registered: {user.Email}");
                     await _signInManager.SignInAsync(user, isPersistent: false);
+                    // await _userManager.AddToRoleAsync(user, "User");
                     return RedirectToAction("Index", "Home");
                 }
 
