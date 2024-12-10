@@ -4,28 +4,73 @@
     ViewData["Title"] = "User List";
 }
 
-<h2>User List</h2>
+<h2 class="text-center my-4 text-uppercase text-white">@ViewData["Title"]</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Roles</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var userRole in Model)
-        {
+<div class="table-responsive bg-dark p-3 rounded shadow">
+    <table class="table table-hover table-dark">
+        <thead class="bg-secondary text-light">
             <tr>
-                <td>@userRole.User.UserName</td>
-                <td>@userRole.User.Email</td>
-                <td>@string.Join(", ", userRole.Roles)</td>
-                <td>
-                    <a href="@Url.Action("AssignRole", "Admin", new { userId = userRole.User.Id })">Assign Role</a>
-                </td>
+                <th class="py-3 px-4">Username</th>
+                <th class="py-3 px-4">Email</th>
+                <th class="py-3 px-4">Roles</th>
+                <th class="py-3 px-4 text-center">Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="4" class="text-center text-muted py-4">
+                        No users available. Add users to assign roles.
+                    </td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var userRole in Model)
+                {
+                    <tr>
+                        <td class="py-3 px-4 text-light">@userRole.User.UserName</td>
+                        <td class="py-3 px-4 text-light">@userRole.User.Email</td>
+                        <td class="py-3 px-4 text-light">@string.Join(", ", userRole.Roles)</td>
+                        <td class="py-3 px-4 text-center">
+                            <a href="@Url.Action("AssignRole", "Admin", new { userId = userRole.User.Id })"
+                               class="btn btn-primary btn-sm text-uppercase">
+                                Assign Role
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    body {
+        background-color: #0b003a;
+        color: #ffffff;
+    }
+
+    .table-dark {
+        background-color: #1a222b;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #31373d;
+    }
+
+    .table-dark thead th {
+        background-color: #222b33;
+        border: none;
+    }
+
+    .btn-sm {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .text-muted {
+        color: #adb5bd !important;
+    }
+</style>

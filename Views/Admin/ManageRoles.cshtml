@@ -1,18 +1,40 @@
 ﻿@model Expense_Tracker.Models.RoleManagementViewModel
+@{
+    ViewData["Title"] = "Manage Roles";
+}
 
-<h2>Manage Roles</h2>
-<form method="post" asp-action="AssignRole">
-    <select name="userId">
-        @foreach (var user in Model.Users)
-        {
-            <option value="@user.Id">@user.Email</option>
-        }
-    </select>
-    <select name="role">
-        @foreach (var role in Model.Roles)
-        {
-            <option value="@role.Name">@role.Name</option>
-        }
-    </select>
-    <button type="submit">Assign Role</button>
-</form>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="widget p-4">
+                <h2 class="text-center mb-4">Manage Roles</h2>
+
+                <form method="post" asp-action="AssignRole">
+                    <div class="mb-3">
+                        <label for="userId" class="form-label">Select User</label>
+                        <select name="userId" id="userId" class="form-control">
+                            @foreach (var user in Model.Users)
+                            {
+                                <option value="@user.Id">@user.Email</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="role" class="form-label">Select Role</label>
+                        <select name="role" id="role" class="form-control">
+                            @foreach (var role in Model.Roles)
+                            {
+                                <option value="@role.Name">@role.Name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-success">Assign Role</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
