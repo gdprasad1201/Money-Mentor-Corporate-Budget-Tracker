@@ -83,13 +83,13 @@ namespace Expense_Tracker.Controllers
 
                 
                 var result = await _userManager.CreateAsync(user, model.Password);
+                // var roleResult = await _userManager.AddToRoleAsync(user, "Admin"); // Ensure the user is in the User role
 
                 if (result.Succeeded)
                 {
                     // Log successful registration
                     _logger.LogInformation($"User registered: {user.Email}");
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    // await _userManager.AddToRoleAsync(user, "User");
                     return RedirectToAction("Index", "Home");
                 }
 
