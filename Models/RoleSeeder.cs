@@ -1,79 +1,68 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Expense_Tracker.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace Expense_Tracker.Models
+namespace Expense_Tracker.Data
 {
     public class RoleSeeder
     {
         public static async Task SeedRolesAsync(IServiceProvider serviceProvider)
         {
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            using var scope = serviceProvider.CreateScope();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<RoleSeeder>>();
 
-            // Define roles to be created
             string[] roleNames = { "Admin", "User" };
-
-            // Create roles if they do not exist
             foreach (var roleName in roleNames)
             {
                 if (!await roleManager.RoleExistsAsync(roleName))
                 {
                     await roleManager.CreateAsync(new IdentityRole(roleName));
+                    logger.LogInformation($"Created role: {roleName}");
                 }
             }
 
-            // Define admin user email
             const string adminEmail = "admin@example.com";
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
-            // Create or update admin user
             if (adminUser == null)
             {
                 adminUser = new ApplicationUser
                 {
                     UserName = adminEmail,
                     Email = adminEmail,
-                    EmailConfirmed = true // Ensure the email is confirmed
+                    EmailConfirmed = true,
+                    FirstName = "Admin",
+                    LastName = "User",
+                    ProfilePictureUrl = "https://example.com/default-admin-picture.jpg"
                 };
 
-                var creationResult = await userManager.CreateAsync(adminUser, "AdminPassword123!"); // Ensure this meets your password policy
-
-                if (creationResult.Succeeded)
+                var result = await userManager.CreateAsync(adminUser, "AdminPassword123!");
+                if (result.Succeeded)
                 {
+                    logger.LogInformation($"Created admin user: {adminEmail}");
                     await userManager.AddToRoleAsync(adminUser, "Admin");
+                    logger.LogInformation($"Added admin user to Admin role");
                 }
                 else
                 {
-                    // Log errors during user creation
-                    foreach (var error in creationResult.Errors)
+                    foreach (var error in result.Errors)
                     {
-                        Console.WriteLine($"Error creating admin user: {error.Description}");
+                        logger.LogError($"Error creating admin user: {error.Description}");
                     }
                 }
             }
             else
             {
-                // Update existing admin user details if necessary
-                adminUser.EmailConfirmed = true; // Ensure email is confirmed
-
-                var updateResult = await userManager.UpdateAsync(adminUser);
-
-                if (updateResult.Succeeded)
+                logger.LogInformation($"Admin user already exists: {adminEmail}");
+                if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
                 {
-                    // Ensure the user is in the Admin role
-                    if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
-                    {
-                        await userManager.AddToRoleAsync(adminUser, "Admin");
-                    }
-                }
-                else
-                {
-                    // Log errors during user update
-                    foreach (var error in updateResult.Errors)
-                    {
-                        Console.WriteLine($"Error updating admin user: {error.Description}");
-                    }
+                    await userManager.AddToRoleAsync(adminUser, "Admin");
+                    logger.LogInformation($"Added existing admin user to Admin role");
                 }
             }
         }

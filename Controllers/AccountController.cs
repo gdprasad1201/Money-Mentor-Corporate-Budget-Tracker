@@ -1,4 +1,4 @@
-﻿using Expense_Tracker.Models; // Ensure this is included for ApplicationUser
+﻿using Expense_Tracker.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -8,8 +8,8 @@ namespace Expense_Tracker.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly SignInManager<ApplicationUser> _signInManager; // Use ApplicationUser
-        private readonly UserManager<ApplicationUser> _userManager; // Use ApplicationUser
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<AccountController> _logger;
 
         public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ILogger<AccountController> logger)
@@ -38,7 +38,7 @@ namespace Expense_Tracker.Controllers
                     return View(model);
                 }
 
-                var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("Login succeeded for email: {Email}", model.Email);
@@ -57,7 +57,7 @@ namespace Expense_Tracker.Controllers
             }
             else
             {
-                _logger.LogWarning("Invalid model state during login attempt for email: {Email}", model.Email);
+                _logger.LogWarning("Invalid model state during login attempt");
             }
 
             return View(model);
@@ -76,24 +76,21 @@ namespace Expense_Tracker.Controllers
                 {
                     UserName = model.Email,
                     Email = model.Email,
-                    FirstName = model.FirstName, // Ensure this is populated
-                    LastName = model.LastName, // Ensure this is populated
-                    ProfilePictureUrl = "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_2x1.jpg" // Set default profile picture URL
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    ProfilePictureUrl = "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_2x1.jpg"
                 };
 
-                
                 var result = await _userManager.CreateAsync(user, model.Password);
-                // var roleResult = await _userManager.AddToRoleAsync(user, "Admin"); // Ensure the user is in the User role
 
                 if (result.Succeeded)
                 {
-                    // Log successful registration
                     _logger.LogInformation($"User registered: {user.Email}");
+                    await _userManager.AddToRoleAsync(user, "User");
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
 
-                // Log errors if registration failed
                 foreach (var error in result.Errors)
                 {
                     _logger.LogError($"Error registering user: {error.Description}");

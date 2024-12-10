@@ -1,4 +1,5 @@
 using Expense_Tracker.Models;
+using Expense_Tracker.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,7 +30,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Add Identity services with custom ApplicationUser
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = false; // Adjust based on your requirements
+    options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = true;
     options.Password.RequiredLength = 6;
     options.Password.RequireNonAlphanumeric = true;
@@ -41,7 +42,7 @@ builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-// Seed roles and admin user during application startup with logging for debugging
+// Seed roles and admin user during application startup
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -70,15 +71,13 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseAuthentication(); // Ensure authentication middleware is added
+app.UseAuthentication();
 app.UseAuthorization();
 
-// Map routes for controllers with default settings
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Map Razor Pages if using them
 app.MapRazorPages();
 
-app.Run(); // Run the application
+app.Run();
