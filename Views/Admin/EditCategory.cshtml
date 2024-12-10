@@ -1,33 +1,55 @@
 ﻿@model Expense_Tracker.Models.Category
 
 @{
-    ViewData["Title"] = "Edit Category";
+    ViewData["PageTitle"] = "Edit Category";
 }
 
-<h2>Edit Category</h2>
+<h2>@ViewData["PageTitle"]</h2>
 
-<form asp-action="EditCategory" method="post">
-    @Html.HiddenFor(model => model.CategoryId)
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="widget p-5" style="background-color:#212b36">
+                <form asp-action="EditCategory" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" name="CategoryId" value="@Model.CategoryId" />
 
-    <div class="form-group">
-        <label asp-for="Title"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+                    <div class="mb-3">
+                        <label asp-for="Title" class="text-white">Title</label>
+                        <ejs-textbox id="title" placeholder="Title" ejs-for="Title" floatLabelType="Always"></ejs-textbox>
+                        <span asp-validation-for="Title" class="text-danger fs-6"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Type</label>
+                        <div class='e-btn-group custom-rbt-group'>
+                            <input type="radio" id="radioleft" name="Type" value="Expense"
+                                   checked="@(Model.Type == "Expense")" />
+                            <label class="e-btn" for="radioleft">Expense</label>
+                            <input type="radio" id="radiomiddle" name="Type" value="Income"
+                                   checked="@(Model.Type == "Income")" />
+                            <label class="e-btn" for="radiomiddle">Income</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        @{
+                            var data = new string[] { "Food: ", "Utilities: ", "Gas: ", "Electricity: ", "Transportation: ", "Mortgage: ", "Health: ", "Insurance: ", "Internet: ", "Housing: ", "Salary: ", "Vacation: ", "Other: " };
+                        }
+
+                        <ejs-dropdownlist id="icon" placeholder="Select Icon" ejs-for="Icon" floatLabelType="Always" dataSource="@data"></ejs-dropdownlist>
+                        <span asp-validation-for="Icon" class="text-danger fs-6"></span>
+                    </div>
+
+                    <ejs-button id="submit" type="submit" content="Save Changes" cssClass="e-success"></ejs-button>
+                </form>
+            </div>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label asp-for="Icon"></label>
-        <input asp-for="Icon" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Type"></label>
-        <input asp-for="Type" class="form-control" />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Save Changes</button>
-</form>
-
-<div>
-    <a asp-action="ManageCategories">Back to List</a>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

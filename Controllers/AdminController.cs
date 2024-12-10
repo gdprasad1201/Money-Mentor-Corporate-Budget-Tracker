@@ -122,7 +122,7 @@ namespace Expense_Tracker.Controllers
         // GET: Admin/CreateCategory
         public IActionResult CreateCategory()
         {
-            return View();
+            return View(new Category());
         }
 
         // POST: Admin/CreateCategory
@@ -136,8 +136,7 @@ namespace Expense_Tracker.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(ManageCategories));
             }
-
-            return View(category);
+            return View(category); // Return the model back to the view if validation fails
         }
 
         // GET: Admin/EditCategory/5
@@ -255,6 +254,8 @@ namespace Expense_Tracker.Controllers
     {
         public string UserId { get; set; }
         public string UserName { get; set; }
+        public string FirstName { get; set; }  // Add First Name
+        public string LastName { get; set; }
         public List<IdentityRole> Roles { get; set; }
         public IList<string> SelectedRoles { get; set; }
     }
