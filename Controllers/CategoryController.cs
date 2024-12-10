@@ -3,23 +3,37 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Expense_Tracker.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Expense_Tracker.Controllers
 {
-    [Authorize (Roles = "Admin, User")]
+    [Authorize(Roles = "Admin, User")]
     public class CategoryController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CategoryController(ApplicationDbContext context)
+        public CategoryController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+        }
+
+        private async Task SetUserInfo()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user != null)
+            {
+                ViewBag.FirstName = user.FirstName;
+                ViewBag.LastName = user.LastName;
+            }
         }
 
         // GET: Category
         [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> Index()
         {
+            await SetUserInfo();
             return _context.Categories != null ?
                         View(await _context.Categories.ToListAsync()) :
                         Problem("Entity set 'ApplicationDbContext.Categories' is null.");
@@ -27,8 +41,9 @@ namespace Expense_Tracker.Controllers
 
         // GET: Category/AddOrEdit
         [Authorize(Roles = "Admin, User")]
-        public IActionResult AddOrEdit(int id = 0)
+        public async Task<IActionResult> AddOrEdit(int id = 0)
         {
+            await SetUserInfo();
             if (id == 0)
                 return View(new Category());
             else
@@ -41,6 +56,7 @@ namespace Expense_Tracker.Controllers
         [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> AddOrEdit([Bind("CategoryId,Title,Icon,Type")] Category category)
         {
+            await SetUserInfo();
             if (ModelState.IsValid)
             {
                 if (category.CategoryId == 0)
@@ -60,6 +76,7 @@ namespace Expense_Tracker.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            await SetUserInfo();
             if (_context.Categories == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Categories' is null.");

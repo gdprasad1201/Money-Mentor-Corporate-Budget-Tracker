@@ -7,32 +7,46 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Expense_Tracker.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Expense_Tracker.Controllers
 {
-    [Authorize (Roles = "Admin, User")]
+    [Authorize(Roles = "Admin, User")]
     public class TransactionController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public TransactionController(ApplicationDbContext context)
+        public TransactionController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+        }
+
+        private async Task SetUserInfo()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user != null)
+            {
+                ViewBag.FirstName = user.FirstName;
+                ViewBag.LastName = user.LastName;
+            }
         }
 
         // GET: Transaction
         [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> Index()
         {
+            await SetUserInfo();
             var applicationDbContext = _context.Transactions.Include(t => t.Category);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        
         // GET: Transaction/AddOrEdit
         [Authorize(Roles = "Admin, User")]
-        public IActionResult AddOrEdit(int id = 0)
+        public async Task<IActionResult> AddOrEdit(int id = 0)
         {
+            await SetUserInfo();
             PopulateCategories();
             if (id == 0)
                 return View(new Transaction());
@@ -41,13 +55,12 @@ namespace Expense_Tracker.Controllers
         }
 
         // POST: Transaction/AddOrEdit
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> AddOrEdit([Bind("TransactionId,CategoryId,Amount,Note,Date")] Transaction transaction)
         {
+            await SetUserInfo();
             if (ModelState.IsValid)
             {
                 if (transaction.TransactionId == 0)
@@ -67,9 +80,10 @@ namespace Expense_Tracker.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            await SetUserInfo();
             if (_context.Transactions == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Transactions'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Transactions' is null.");
             }
             var transaction = await _context.Transactions.FindAsync(id);
             if (transaction != null)
@@ -80,7 +94,6 @@ namespace Expense_Tracker.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
 
         [NonAction]
         public void PopulateCategories()

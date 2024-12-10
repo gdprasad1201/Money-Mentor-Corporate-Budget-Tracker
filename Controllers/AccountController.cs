@@ -74,7 +74,7 @@ namespace Expense_Tracker.Controllers
             {
                 var user = new ApplicationUser
                 {
-                    UserName = model.Email,
+                    UserName = model.FirstName,
                     Email = model.Email,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
