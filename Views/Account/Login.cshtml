@@ -4,32 +4,65 @@
     ViewData["Title"] = "Login";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2 class="text-center text-white">@ViewData["Title"]</h2>
 
-<form asp-action="Login" method="post">
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-    <div class="form-group form-check">
-        <input asp-for="RememberMe" class="form-check-input" />
-        <label asp-for="RememberMe" class="form-check-label">Remember Me</label>
-    </div>
-    <button type="submit" class="btn btn-primary">Login</button>
-</form>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Increased column width for a larger box -->
+            <div class="widget p-5" style="border: 1px solid #ccc; border-radius: 10px; background-color: #1a222b;">
+                <!-- Set background color to match your theme -->
+                <form asp-action="Login" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-<div>
-    Don't have an account? <a asp-action="Register">Register here</a>.
+                    <div class="form-group mb-3">
+                        <label asp-for="Email" class="text-white" for="Email"></label>
+                        <input asp-for="Email" class="form-control" id="Email" placeholder="Enter your email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Password" class="text-white" for="Password"></label>
+                        <input asp-for="Password" type="password" class="form-control" id="Password" placeholder="Enter your password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group form-check mb-3">
+                        <input asp-for="RememberMe" class="form-check-input" id="RememberMe" />
+                        <label asp-for="RememberMe" class="form-check-label text-white" for="RememberMe">Remember Me</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </form>
+
+                <div class="mt-3 text-center">
+                    <span class="text-white">Don't have an account? </span>
+                    <a asp-action="Register" class="text-primary no-a-decoration">Register here</a>. <!-- Added text-primary for blue color -->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }
+
+<style>
+    .text-primary {
+        color: #007bff; /* Bootstrap's primary color */
+    }
+
+        .text-primary:hover {
+            color: #0056b3; /* Darker shade for hover effect */
+            text-decoration: underline; /* Optional: adds underline on hover */
+        }
+
+    .no-a-decoration {
+        text-decoration: none; /* Removes default underline from links */
+    }
+
+        .no-a-decoration:hover {
+            text-decoration: underline; /* Adds underline on hover */
+        }
+</style>

@@ -11,9 +11,8 @@
         <input type="hidden" asp-for="UserId" />
 
         <div class="mb-3">
-            <label for="SelectedRoles" class="form-label text-uppercase fw-bold" style="color: #FFFFFF;">Select Roles:</label>
-            <select name="SelectedRoles" id="SelectedRoles" class="form-select bg-secondary text-dark border-0" multiple>
-
+            <label for="SelectedRoles" class="form-label text-uppercase fw-bold">Select Roles:</label>
+            <select name="SelectedRoles" id="SelectedRoles" class="form-select bg-secondary text-light border-0" multiple>
                 @foreach (var role in Model.Roles)
                 {
                     <option value="@role.Name">@role.Name</option>
@@ -49,29 +48,28 @@
     }
 
     .form-select {
-        background-color: #FFFFFF; /* Lighter background for select box */
-        border-color: #444;
-        color: #fff;
+        background-color: #343a40; /* Matches dark theme */
+        border: 1px solid #444;
+        color: #ffffff;
     }
 
-        .form-select:focus {
-            border-color: #007bff;
-            background-color: #000000; /* Slightly lighter background on focus */
-        }
+    .form-select:focus {
+        border-color: #007bff;
+        background-color: #495057;
+    }
+
+    .form-label, .form-text {
+        color: #d1d1d1;
+    }
 
     .btn-primary {
         background-color: #007bff;
         border-color: #007bff;
     }
 
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #004085;
-        }
-
-    .form-text {
-        font-size: 0.875rem;
-        color: #d1d1d1; /* Lighter text for better readability */
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #004085;
     }
 
     .alert {
@@ -87,9 +85,5 @@
     .alert-danger {
         background-color: #dc3545;
         color: #fff;
-    }
-
-    .form-label, .form-text {
-        color: #e0e0e0; /* Lighter color for better readability */
     }
 </style>
