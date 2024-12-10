@@ -2,8 +2,18 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h2 class="fs-2 fw-bold text-uppercase text-white">@ViewData["Title"]</h2>
+        <p class="fs-6 text-light">Welcome to the Admin Dashboard!</p>
+    </div>
 
-<p>Welcome to the Admin Dashboard!</p>
-<a href="@Url.Action("UserList", "Admin")" class="btn btn-primary">Manage Users</a>
-<a href="@Url.Action("ManageCategories", "Admin")" class="btn btn-secondary">Manage Categories</a>
+    <div class="d-flex justify-content-center gap-4">
+        <a href="@Url.Action("UserList", "Admin")" class="btn btn-outline-light btn-lg text-uppercase fw-bold px-4">
+            Manage Users
+        </a>
+        <a href="@Url.Action("ManageCategories", "Admin")" class="btn btn-outline-light btn-lg text-uppercase fw-bold px-4">
+            Manage Categories
+        </a>
+    </div>
+</div>
