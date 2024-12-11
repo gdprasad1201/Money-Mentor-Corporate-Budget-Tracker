@@ -16,7 +16,7 @@ namespace Expense_Tracker.Data
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var logger = scope.ServiceProvider.GetRequiredService<ILogger<RoleSeeder>>();
 
-            string[] roleNames = { "Admin", "User" };
+            string[] roleNames = { "Admin", "User", "Anonymous" };
             foreach (var roleName in roleNames)
             {
                 if (!await roleManager.RoleExistsAsync(roleName))

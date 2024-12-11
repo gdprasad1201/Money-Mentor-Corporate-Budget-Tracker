@@ -34,39 +34,61 @@ namespace Expense_Tracker.Controllers
         }
 
         // GET: Transaction
-        [Authorize(Roles = "Admin, User")]
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             await SetUserInfo();
-            var applicationDbContext = _context.Transactions.Include(t => t.Category);
-            return View(await applicationDbContext.ToListAsync());
+            if (User.Identity.IsAuthenticated)
+            {
+                var applicationDbContext = _context.Transactions.Include(t => t.Category);
+                return View(await applicationDbContext.ToListAsync());
+            }
+            else
+            {
+                // Provide limited or no data for anonymous users
+                return View(new List<Transaction>());
+            }
         }
 
         // GET: Transaction/AddOrEdit
+        //[AllowAnonymous]
         [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> AddOrEdit(int id = 0)
         {
-            await SetUserInfo();
-            PopulateCategories();
             if (id == 0)
+            {
+                PopulateCategories();
                 return View(new Transaction());
+            }
             else
-                return View(_context.Transactions.Find(id));
+            {
+                var transaction = await _context.Transactions.FindAsync(id);
+                if (transaction == null)
+                {
+                    return NotFound();
+                }
+                PopulateCategories();
+                return View(transaction);
+            }
         }
 
         // POST: Transaction/AddOrEdit
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //[AllowAnonymous]
         [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> AddOrEdit([Bind("TransactionId,CategoryId,Amount,Note,Date")] Transaction transaction)
         {
-            await SetUserInfo();
             if (ModelState.IsValid)
             {
                 if (transaction.TransactionId == 0)
+                {
                     _context.Add(transaction);
+                }
                 else
+                {
                     _context.Update(transaction);
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -80,7 +102,6 @@ namespace Expense_Tracker.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await SetUserInfo();
             if (_context.Transactions == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Transactions' is null.");
@@ -90,7 +111,6 @@ namespace Expense_Tracker.Controllers
             {
                 _context.Transactions.Remove(transaction);
             }
-
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

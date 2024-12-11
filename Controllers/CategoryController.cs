@@ -30,24 +30,31 @@ namespace Expense_Tracker.Controllers
         }
 
         // GET: Category
-        [Authorize(Roles = "Admin, User")]
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             await SetUserInfo();
-            return _context.Categories != null ?
-                        View(await _context.Categories.ToListAsync()) :
-                        Problem("Entity set 'ApplicationDbContext.Categories' is null.");
+            if (User.Identity.IsAuthenticated)
+            {
+                return _context.Categories != null ?
+                            View(await _context.Categories.ToListAsync()) :
+                            Problem("Entity set 'ApplicationDbContext.Categories' is null.");
+            }
+            else
+            {
+                // Return an empty list or a different view for anonymous users
+                return View(new List<Category>());
+            }
         }
 
         // GET: Category/AddOrEdit
         [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> AddOrEdit(int id = 0)
         {
-            await SetUserInfo();
             if (id == 0)
                 return View(new Category());
             else
-                return View(_context.Categories.Find(id));
+                return View(await _context.Categories.FindAsync(id));
         }
 
         // POST: Category/AddOrEdit
@@ -56,7 +63,6 @@ namespace Expense_Tracker.Controllers
         [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> AddOrEdit([Bind("CategoryId,Title,Icon,Type")] Category category)
         {
-            await SetUserInfo();
             if (ModelState.IsValid)
             {
                 if (category.CategoryId == 0)
@@ -76,7 +82,6 @@ namespace Expense_Tracker.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await SetUserInfo();
             if (_context.Categories == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Categories' is null.");
