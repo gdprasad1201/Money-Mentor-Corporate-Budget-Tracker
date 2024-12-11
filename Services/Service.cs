@@ -22,7 +22,7 @@ namespace Expense_Tracker.Services
             var reviewsWithSentiment = new List<(string Review, double Sentiment)>();
             ChatClient chatClient = new AzureOpenAIClient(new Uri(ApiEndpoint), _apiCredential).GetChatClient(DeploymentName);
 
-            string[] personas = { "is harsh", "loves romance", "loves comedy", "loves thrillers", "loves fantasy", "is a sci-fi fan", "adores historical dramas", "enjoys indie films", "loves action-packed blockbusters", "appreciates artistic and experimental films" };
+            string[] personas = { "is harsh"};
             var reviews = new List<string>();
             foreach (string persona in personas)
             {
