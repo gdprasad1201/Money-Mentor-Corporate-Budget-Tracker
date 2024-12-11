@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Financial Advisor";
+    ViewData["isDashboard"] = false; /* Use false if this is a standalone page */
+}
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="widget p-4">
+            <h5 class="fw-bold">Ask Your Financial Advisor</h5>
+            <p class="text-muted">Enter a question below, and our AI-powered advisor will provide guidance tailored to your financial needs.</p>
+            <form id="advisorForm">
+                <div class="mb-3">
+                    <label for="userPrompt" class="form-label">Your Question</label>
+                    <textarea id="userPrompt" class="form-control" rows="3" placeholder="Type your question here..."></textarea>
+                </div>
+                <button type="button" class="btn btn-primary" id="askButton">Get Advice</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget p-4">
+            <h5 class="fw-bold">Advisor's Response</h5>
+            <div id="responseWindow" class="p-3" style="background-color: #1a222b; border-radius: 8px; color: #ffffff; min-height: 150px;">
+                <p class="text-muted">Your response will appear here...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("askButton").addEventListener("click", async function () {
+        const userPrompt = document.getElementById("userPrompt").value;
+        const responseWindow = document.getElementById("responseWindow");
+
+        // Clear existing response
+        responseWindow.innerHTML = '<p class="text-muted">Processing your request...</p>';
+
+        try {
+            // Simulating an API call - Replace this with your actual OpenAI API integration
+            const response = await fetch('/api/FinancialAdvisor/GetAdvice', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ prompt: userPrompt }),
+            });
+
+            const data = await response.json();
+            responseWindow.innerHTML = `<p>${data.advice}</p>`;
+        } catch (error) {
+            responseWindow.innerHTML = `<p class="text-danger">An error occurred: ${error.message}</p>`;
+        }
+    });
+</script>
