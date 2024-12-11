@@ -2,8 +2,10 @@ using Expense_Tracker.Models;
 using Expense_Tracker.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Expense_Tracker.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddScoped<OpenAIService>();
 
 // Get SQL Server password from configuration
 var sqlPassword = builder.Configuration["SQLServer:Password"];
