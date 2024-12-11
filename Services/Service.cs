@@ -11,10 +11,13 @@ namespace Expense_Tracker.Services
         private readonly string _apiKey;
         private const string ApiEndpoint = "https://fall2024-gdprasad-final-openai2.openai.azure.com/";
         private const string DeploymentName = "gpt-35-turbo";
-        private ApiKeyCredential _apiCredential = new("F7qQfKR0ipX3G149hoyH06ufsfY6VNK0GANXIXvuLdTqLiXFpKbZJQQJ99ALACHYHv6XJ3w3AAABACOGGAvt");
-
-
-        public async Task<List<(string Review, double Sentiment)>> GetMovieReviews()
+        private ApiKeyCredential _apiCredential;
+        public OpenAIService(IConfiguration configuration)
+        {
+            _apiKey = configuration["ApiSettings:ApiKey"] ?? throw new Exception("OpenAI API key not found in the configuration.");
+            _apiCredential = new(_apiKey);
+        }
+        public async Task<List<(string Review, double Sentiment)>> GetResponse()
         {
             var reviewsWithSentiment = new List<(string Review, double Sentiment)>();
             ChatClient chatClient = new AzureOpenAIClient(new Uri(ApiEndpoint), _apiCredential).GetChatClient(DeploymentName);

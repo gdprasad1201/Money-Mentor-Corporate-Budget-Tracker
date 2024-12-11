@@ -13,7 +13,7 @@ namespace Expense_Tracker.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            await _openAIService.GetMovieReviews();
+            await _openAIService.GetResponse();
             return View();
         }
     }
