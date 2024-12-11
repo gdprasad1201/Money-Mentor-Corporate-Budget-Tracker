@@ -9,9 +9,10 @@ builder.Services.AddScoped<OpenAIService>();
 
 // Get SQL Server password from configuration
 var sqlPassword = builder.Configuration["SQLServer:Password"];
+var SyncfusionKey = builder.Configuration["Syncfusion:Key"];
 
 // Register Syncfusion License
-Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mgo+DSMBPh8sVXJzS0d+WFlPd11dXmJWd1p/THNYflR1fV9DaUwxOX1dQl9nSH9RdURkWXtacHBSQGY=");
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(SyncfusionKey);
 
 // Add services to the container
 builder.Services.AddControllersWithViews();
