@@ -1,5 +1,6 @@
 ﻿using Expense_Tracker.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
@@ -9,10 +10,12 @@ namespace Expense_Tracker.Controllers
     public class DashboardController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public DashboardController(ApplicationDbContext context)
+        public DashboardController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [AllowAnonymous]
@@ -20,6 +23,13 @@ namespace Expense_Tracker.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
+                // Get the currently authenticated user
+                var user = await _userManager.GetUserAsync(User);
+
+                // Set the FirstName and LastName in ViewBag
+                ViewBag.FirstName = user.FirstName;
+                ViewBag.LastName = user.LastName;
+
                 //Last 7 Days
                 DateTime StartDate = DateTime.Today.AddDays(-6);
                 DateTime EndDate = DateTime.Today;
@@ -117,6 +127,8 @@ namespace Expense_Tracker.Controllers
                 ViewBag.DoughnutChartData = new List<object>();
                 ViewBag.SplineChartData = new List<object>();
                 ViewBag.RecentTransactions = new List<Transaction>();
+                ViewBag.FirstName = "";
+                ViewBag.LastName = "";
             }
 
             return View();
