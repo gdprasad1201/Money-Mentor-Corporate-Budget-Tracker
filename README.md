@@ -1,4 +1,4 @@
-# budgetTracker
+# Money Mentor
 
 I'm thrilled to unveil my latest project: the Budget Tracker website, Money Mentor! 💰 Managing finances can be challenging, but with the right tools, it becomes a breeze. That's why my teammates Rahul Mondal, Girwan Dhakal, Cyrus Gomes, and I developed this budget tracker, designed to help businesses keep a close eye on their income and expenses, ensuring they stay on top of their financial goals, as part of the final project for our web development class at The University of Alabama. 
 
